@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { join } from 'path';
@@ -41,10 +42,10 @@ export class ConfigurationService {
             database: process.env.DB_NAME,
             username: process.env.DB_USER,
             password: process.env.DB_PASSWORD,            
-            entities: [join(__dirname,'./share/entities/**', '*.entity.{ts,js}')],
-            migrations: [join(__dirname,'./migrations/**', '*{.ts,.js}')],
-            migrationsRun: false,
-            synchronize: false,
+            entities: ['dist/**/*.entity.{ts,js}'],
+            migrations: ['../../migrations/**/*{.ts,.js}'],
+            migrationsRun: true,
+            synchronize: true,
             logging: true
         }
     }

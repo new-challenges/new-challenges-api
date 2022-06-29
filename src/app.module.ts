@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,9 +12,7 @@ import { SharedModule } from './share/share.module';
     //   envFilePath: [ `.env`]
     // }),
     SharedModule,
-    TypeOrmModule.forRootAsync({
-        useFactory: (configService= new ConfigurationService()) => configService.typeOrmConfig()
-      })
+    TypeOrmModule.forRoot((new ConfigurationService()).typeOrmConfig())
   ],
   controllers: [AppController],
   providers: [AppService],
