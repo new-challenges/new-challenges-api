@@ -19,7 +19,13 @@ export class ConfigurationService {
         return {
             APPLICATION: {
                 API_REFIX: process.env.API_REFIX,
-                PORT: Number(process.env.PORT) || 3000
+                PORT: Number(process.env.PORT) || 3000,
+                JWT: {
+                    SECRET_KEY: String(process.env.JWT_SECRET_KEY),
+                    EXPIRES_IN: String(process.env.JWT_EXPIRES_IN),
+                    ALGORTHM: process.env.JWT_ALGORTHM,
+                    STRATEGY: process.env.JWT_STRATEGY
+                }
             },
             MYSQL: {
                 DB_HOST: process.env.DB_HOST,
@@ -34,19 +40,19 @@ export class ConfigurationService {
         }
     }
 
-    public typeOrmConfig(): TypeOrmModuleOptions {
+    public typeOrmConfig(): any {
         return {
             type: 'mysql',
             host: process.env.DB_HOST,
             port: Number(process.env.DB_PORT) || 3306,
             database: process.env.DB_NAME,
             username: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,            
+            password: process.env.DB_PASSWORD,
             entities: ['dist/**/*.entity.{ts,js}'],
             migrations: ['../../migrations/**/*{.ts,.js}'],
             migrationsRun: true,
-            synchronize: true,
-            logging: true
+            synchronize: false,
+            logging: true,
         }
     }
 }

@@ -1,11 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { RoleGuard } from './jwt/gaurds/role.guard';
 import registerSwagger from './share/configurations/swagger.config';
 import { APP_CONFIG, ConfigurationService } from './share/services/configuration.service';
 
 async function bootstrap() {
   
-  const app = await NestFactory.create(AppModule);  
+  const app = await NestFactory.create(AppModule);
 
   // Setting app
   const prefix = APP_CONFIG.APPLICATION.API_REFIX;

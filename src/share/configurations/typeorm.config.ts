@@ -9,10 +9,11 @@ const ormconfig = new DataSource({
     database: process.env.DB_NAME,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    entities: ['src/share/entities/**/*.entity.{ts,js}'],
-    migrations: ['src/migrations/**/*{.ts,.js}'],
+    entities: ['./src/share/entities/**/*.entity.{ts,js}'],
+    migrations: ['./src/migrations/'],
     migrationsRun: true,
-    synchronize: false,
+    synchronize: true,
     migrationsTableName: 'migrations',
+    
 })
 export default ormconfig;

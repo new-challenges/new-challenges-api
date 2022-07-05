@@ -1,5 +1,5 @@
 import { Repository } from "typeorm";
-import { LevelResponse } from "../dtos/responses/level.response";
+import { LevelResponse } from "../dtos/levels/responses/level.response";
 import { BaseService } from "./base/base.service";
 import { LevelEntity } from '../share/entities/level.entity';
 import { LevelRepository } from '../repositories/level.repository';
