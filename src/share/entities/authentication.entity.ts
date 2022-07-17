@@ -11,10 +11,10 @@ export class AuthenticationEntity extends PKAutoIncrementEntity{
     @Column({name: 'password', type:'varchar'})
     password: string;
 
-    @Column({name: 'forget_password', type:'bit'})
+    @Column({name: 'forget_password', type:'boolean', default: 0})
     forgetPassword: boolean;
 
-    @Column({name: 'device', length: 255, type:'varchar'})
+    @Column({name: 'device', length: 255, type:'varchar', nullable: true})
     device: string;
 
     @Column({name: 'role_id', length: 255, type:'varchar'})

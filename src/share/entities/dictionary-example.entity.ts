@@ -4,13 +4,13 @@ import { PKAutoIncrementEntity } from "./base/base.entity";
 
 @Entity(ENTITY_CONTANSTS.DICTIONARY_EXAMPLE)
 export class DictionaryExampleEntity extends PKAutoIncrementEntity {
-    @Column({name: 'dictionary_id'})
-    @Index({unique: true})
+    @Column({ name: 'dictionary_id' })
+    @Index({ unique: true })
     dictionaryId: number;
 
-    @Column({name: 'example', type: 'varchar', length: 255})
+    @Column({ name: 'example', type: 'varchar', length: 255, nullable: true })
     example: string;
 
-    @Column({name: 'description', type: 'varchar', length: 1500})
+    @Column({ name: 'description', type: 'varchar', length: 1500, nullable: true })
     description: string;
 }

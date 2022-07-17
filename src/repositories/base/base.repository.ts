@@ -1,9 +1,9 @@
 import { Logger } from '@nestjs/common';
-import { FindManyOptions, Repository } from 'typeorm';
+import { DeleteResult, FindManyOptions, FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 
 export class BaseRepository<T>{
     public _logger = new Logger(BaseRepository.name);
-    private _repos: Repository<T>;
+    public _repos: Repository<any>;
     constructor(repos: Repository<T>) {
         this._repos = repos;
     }
@@ -12,14 +12,8 @@ export class BaseRepository<T>{
      * getAll
      * @returns 
      */
-    getAll(order?: any): Promise<T[]> {
-        if (order) {
-            return this._repos.find({
-                order: { ...order }
-            });
-        } else {
-            return this._repos.find();
-        }
+    getAll(options?: FindManyOptions<T>): Promise<T[]> {
+        return this._repos.find(options);
     }
 
 
@@ -29,15 +23,17 @@ export class BaseRepository<T>{
      * @param order 
      * @returns 
      */
-    getByCondition(condition: any, order?: any): Promise<T[]> {
-        if (order) {
-            return this._repos.find({
-                where: { ...condition },
-                order: { ...order },
-            });
-        } else {
-            return this._repos.find(condition);
-        }
+    getByCondition(options?: FindManyOptions<T>): Promise<T[]> {
+        return this._repos.find(options);
+    }
+
+    /**
+     * getPaging
+     * @param options 
+     * @returns 
+     */
+    getPaging(options?: FindManyOptions<T>): Promise<[T[], number]> {
+        return this._repos.findAndCount(options);
     }
 
     /**
@@ -45,8 +41,8 @@ export class BaseRepository<T>{
      * @param id 
      * @returns 
      */
-    getById(id: any) {
-        return this._repos.findOne(id);
+    getById(id: any): Promise<T> {
+        return this._repos.findOne({ where: { id } });
     }
 
     /**
@@ -54,14 +50,8 @@ export class BaseRepository<T>{
      * @param options 
      * @returns 
      */
-    getOne(options?: any) {
-        if (options) {
-            return this._repos.findOneBy(options);
-        } else {
-            return this._repos.find({
-                take: 1
-            });
-        }
+    getOne(options: FindOneOptions<T>): Promise<T> {
+        return this._repos.findOne(options);
     }
 
     /**
@@ -69,21 +59,16 @@ export class BaseRepository<T>{
      * @param options 
      * @returns 
      */
-    count(options?: any) {
-        if (options) {
-            return this._repos.count();
-        } else {
-            return this._repos.count(options);
-        }
+    count(options?: FindManyOptions<T>) {
+        return this._repos.count(options);
     }
-
 
     /**
      * create
      * @param entity 
      * @returns 
      */
-    create(entity: T) {
+    create(entity: any) {
         return this._repos.insert(entity);
     }
 
@@ -92,7 +77,7 @@ export class BaseRepository<T>{
      * @param entities 
      * @returns 
      */
-    createMany(entities: T[]) {
+    createMany(entities: []) {
         return this._repos.save(entities);
     }
 
@@ -101,8 +86,8 @@ export class BaseRepository<T>{
     * @param entity 
     * @returns 
     */
-    update(entity: T) {
-        return this._repos.save([entity]);
+    update(entity: any): Promise<T> {
+        return this._repos.save([entity])[0];
     }
 
 
@@ -111,7 +96,7 @@ export class BaseRepository<T>{
      * @param entities 
      * @returns 
      */
-    updateMany(entities: T[]) {
+    updateMany(entities: []) {
         return this._repos.save(entities);
     }
 
@@ -120,7 +105,7 @@ export class BaseRepository<T>{
      * @param options
      * @returns 
      */
-    delete(options?: any) {
+    delete(options?: any): Promise<DeleteResult> {
         return this._repos.delete(options);
     }
 } 

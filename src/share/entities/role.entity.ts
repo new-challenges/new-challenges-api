@@ -7,6 +7,6 @@ export class RoleEntity extends PKStringEnity{
     @Column({name: 'name', length: 255, type:'varchar'})
     name: string;
 
-    @Column({name: 'description', length: 255, type:'varchar'})
+    @Column({name: 'description', length: 255, type:'varchar', nullable: true})
     description: string;
 }

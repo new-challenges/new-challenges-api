@@ -7,6 +7,8 @@ import { APP_CONFIG, ConfigurationService } from './share/services/configuration
 async function bootstrap() {
   
   const app = await NestFactory.create(AppModule);
+  // Set Global Guards to authorize
+  app.useGlobalGuards();
 
   // Setting app
   const prefix = APP_CONFIG.APPLICATION.API_REFIX;

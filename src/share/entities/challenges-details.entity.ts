@@ -12,10 +12,10 @@ export class ChallengesDetailsEntity extends PKAutoIncrementEntity{
     @Column({ name: 'question', type: 'varchar', length: 1000 })
     question: string;
 
-    @Column({ name: 'question', type: 'varchar', length: 255 })
+    @Column({ name: 'answer', type: 'varchar', length: 255 })
     answer: string;
 
-    @Column({ name: 'currect_answer', type: 'varchar', length: 255 })
+    @Column({ name: 'currect_answer', type: 'varchar', length: 255, nullable: true })
     currectAnswer: string;
 
     @Column({ name: 'status', type: 'varchar', length: 255 })

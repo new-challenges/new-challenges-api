@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 const ormconfig = new DataSource({
-    type: 'mysql',
+    type: `postgres`,
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT) || 3306,
     database: process.env.DB_NAME,

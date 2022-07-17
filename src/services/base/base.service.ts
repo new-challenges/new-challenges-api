@@ -1,17 +1,55 @@
+import { plainToClass, plainToClassFromExist } from "class-transformer";
 import { BaseRepository } from "src/repositories/base/base.repository";
-import { Repository } from "typeorm";
+import { FindManyOptions, FindOneOptions, FindOptionsWhere } from "typeorm";
+import { ResponseDto } from "../../dtos/response.dto";
+import { RESPONSE_CODE_CONTANTS } from "../../share/constants/response-code.const";
 
 export class BaseService<TRep, TEnity>{
-
-    constructor(private _repos: BaseRepository<TEnity>) {
+    _dto: any;
+    _entity: any;
+    constructor(private _repos: BaseRepository<TEnity>, dto: new () => TRep) {
+        this._dto = dto;
     }
 
     /**
      * getAll
      * @returns 
      */
-    getAll(order?: any): Promise<TEnity[]> {
-        return this._repos.getAll(order);
+    async getAll(options?: FindManyOptions<TEnity>): Promise<ResponseDto> {
+        const results = await this._repos.getAll(options);
+        const data = plainToClassFromExist(this._dto, results);
+        return new ResponseDto(
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
+            data
+        );
+    }
+
+    /**
+     * getPaging
+     * @param options 
+     * @returns 
+     */
+    async getPaging(options: FindManyOptions<TEnity>): Promise<ResponseDto> {
+
+        const cloneObject = {...options};
+        const take = cloneObject.take || 10;
+        const skip = cloneObject.skip * options.take;
+        options.skip = skip;
+        options.take = take;
+
+        const [data, count] = await this._repos.getPaging(options);
+        const mappingData = plainToClassFromExist(this._dto, data);
+        const pageData = {
+            pageResults: mappingData,
+            count
+        }
+
+        return new ResponseDto(
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
+            pageData
+        );
     }
 
     /**
@@ -20,8 +58,14 @@ export class BaseService<TRep, TEnity>{
      * @param order 
      * @returns 
      */
-    getByCondition(condition: any, order?: any): Promise<TEnity[]> {
-        return this._repos.getByCondition(condition);
+    async getByCondition(options?: FindManyOptions<TEnity>): Promise<ResponseDto> {
+        const results = await this._repos.getByCondition(options);
+        const data = plainToClassFromExist(this._dto, results);
+        return new ResponseDto(
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
+            data
+        );
     }
 
     /**
@@ -29,8 +73,14 @@ export class BaseService<TRep, TEnity>{
      * @param id 
      * @returns 
      */
-    getById(id: any) {
-        return this._repos.getById(id);
+    async getById(id: any): Promise<ResponseDto> {
+        const result = await this._repos.getById(id);
+        const data = plainToClass(this._dto, result);
+        return new ResponseDto(
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
+            data
+        );
     }
 
     /**
@@ -38,8 +88,14 @@ export class BaseService<TRep, TEnity>{
      * @param options 
      * @returns 
      */
-    getOne(options?: any) {
-        return this._repos.getOne(options);
+    async getOne(options: FindOneOptions<TEnity>): Promise<ResponseDto> {
+        const result = await this._repos.getOne(options);
+        const data = plainToClass(this._dto, result);
+        return new ResponseDto(
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
+            data
+        );
     }
 
     /**
@@ -47,8 +103,13 @@ export class BaseService<TRep, TEnity>{
      * @param options 
      * @returns 
      */
-    count(options?: any) {
-        return this._repos.count(options);
+    async count(options?: FindManyOptions<any>): Promise<ResponseDto> {
+        const data = await this._repos.count(options);
+        return new ResponseDto(
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
+            data
+        );
     }
 
 
@@ -57,8 +118,13 @@ export class BaseService<TRep, TEnity>{
      * @param entity 
      * @returns 
      */
-    create(entity: TEnity) {
-        return this._repos.create(entity);
+    async create(req: any): Promise<ResponseDto> {
+        const data = await this._repos.create(req);
+        return new ResponseDto(
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
+            data
+        );
     }
 
     /**
@@ -66,8 +132,13 @@ export class BaseService<TRep, TEnity>{
      * @param entities 
      * @returns 
      */
-    createMany(entities: TEnity[]) {
-        return this._repos.createMany(entities);
+    async createMany(entities: []): Promise<ResponseDto> {
+        const data = await this._repos.createMany(entities);
+        return new ResponseDto(
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
+            data
+        );
     }
 
     /**
@@ -75,8 +146,13 @@ export class BaseService<TRep, TEnity>{
     * @param TEnity 
     * @returns 
     */
-    update(entity: TEnity) {
-        return this._repos.update(entity);
+    async update(entity: any): Promise<ResponseDto> {
+        const data = await this._repos.update(entity);
+        return new ResponseDto(
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
+            data
+        );
     }
 
 
@@ -85,8 +161,13 @@ export class BaseService<TRep, TEnity>{
      * @param entities 
      * @returns 
      */
-    updateMany(entities: TEnity[]) {
-        return this._repos.updateMany(entities);
+    async updateMany(entities: []): Promise<ResponseDto> {
+        const data = await this._repos.updateMany(entities);
+        return new ResponseDto(
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
+            data
+        );
     }
 
     /**
@@ -94,7 +175,12 @@ export class BaseService<TRep, TEnity>{
      * @param options
      * @returns 
      */
-    delete(options?: any) {
-        return this._repos.delete(options);
+    async delete(options?: any): Promise<ResponseDto> {
+        const data = await this._repos.delete(options);
+        return new ResponseDto(
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
+            RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
+            data
+        );
     }
 }

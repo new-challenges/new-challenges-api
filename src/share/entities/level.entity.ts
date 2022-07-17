@@ -11,6 +11,6 @@ export class LevelEntity extends PKAutoIncrementEntity {
     @Column({name: 'quanlity'})
     quanlity: number;
 
-    @Column({name: 'description', length: 1500, type:'varchar'})
+    @Column({name: 'description', length: 1500, type:'varchar', nullable: true})
     description: string;
 }

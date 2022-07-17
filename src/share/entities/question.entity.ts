@@ -8,9 +8,9 @@ export class QuestionEntity extends PKAutoIncrementEntity {
     @Column({ name: 'name', type: 'varchar', length: 255 })
     name: string;
 
-    @Column({ name: 'answer', type: 'varchar', length: 255 })
+    @Column({ name: 'answer', type: 'varchar', length: 255, nullable: true })
     answer: string;
 
-    @Column({ name: 'point' })
+    @Column({ name: 'point', nullable: true })
     point: number;
 }

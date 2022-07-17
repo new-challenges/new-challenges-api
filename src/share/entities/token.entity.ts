@@ -8,7 +8,7 @@ export class TokenEntity extends PKStringEnity {
     @Column({ name: "name", type: 'varchar', length: 255})
     name: string;
 
-    @Column({ name: "images", type: 'varchar', length: 1000})
+    @Column({ name: "images", type: 'varchar', length: 1000, nullable: true})
     images: string;
 
     @Column({name: 'number_of_pieces'})

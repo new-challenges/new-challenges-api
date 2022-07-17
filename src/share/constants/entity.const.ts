@@ -12,5 +12,6 @@ export const ENTITY_CONTANSTS = {
     TRANSATION: 'transaction',
     USER_WALLET_REF: 'user_wallet_ref',
     USER: 'user',
-    WALLET_TOKEN_REF: 'wallet-token-ref'
+    WALLET_TOKEN_REF: 'wallet-token-ref',
+    OTP: 'otp'
 }

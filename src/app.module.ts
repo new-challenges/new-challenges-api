@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common';
+import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -7,6 +7,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RoleGuard } from './jwt/gaurds/role.guard';
 import { JwtStrategy } from './jwt/strategies/jwt.strategy';
+import { contextMiddleware } from './middlewares/context.middleware';
 import { APP_CONFIG, ConfigurationService } from './share/services/configuration.service';
 import { SharedModule } from './share/share.module';
 
@@ -29,12 +30,12 @@ import { SharedModule } from './share/share.module';
     AppService,
     JwtService,
     JwtStrategy,
-    {
-      provide: APP_GUARD,
-      useClass: RoleGuard,
-    },
-      
   ],
   exports: [JwtService]
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): MiddlewareConsumer | void {
+    consumer.apply(contextMiddleware).forRoutes('*');
+  }
+}
+

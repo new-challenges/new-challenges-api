@@ -7,6 +7,6 @@ export class TokenPuzzlePiecesEntity extends PKAutoIncrementEntity {
     @Column({ name: "tokenId", type: 'varchar', length: 255})
     tokenId: string;
 
-    @Column({ name: "images", type: 'varchar', length: 1000})
+    @Column({ name: "images", type: 'varchar', length: 1000, nullable: true})
     images: string;
 }

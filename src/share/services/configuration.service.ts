@@ -20,6 +20,7 @@ export class ConfigurationService {
             APPLICATION: {
                 API_REFIX: process.env.API_REFIX,
                 PORT: Number(process.env.PORT) || 3000,
+                ENV: process.env.ENV,
                 JWT: {
                     SECRET_KEY: String(process.env.JWT_SECRET_KEY),
                     EXPIRES_IN: String(process.env.JWT_EXPIRES_IN),
@@ -36,25 +37,39 @@ export class ConfigurationService {
             },
             AURA_NETWORK: {
 
+            },
+            SUPPER_ADMIN: {
+                USERNAME: process.env.SUPPER_ADMIN,
+                PASSWORD: process.env.SUPPER_ADMIN_PW,
             }
         }
     }
 
     public typeOrmConfig(): any {
-        return {
-            type: 'mysql',
+        const env = process.env.EVN;
+        const connection: any = {
+            type: `postgres`,
             host: process.env.DB_HOST,
             port: Number(process.env.DB_PORT) || 3306,
             database: process.env.DB_NAME,
             username: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             entities: ['dist/**/*.entity.{ts,js}'],
-            migrations: ['../../migrations/**/*{.ts,.js}'],
+            migrations: ['dist/migrations/**/*{.ts,.js}'],
             migrationsRun: true,
             synchronize: false,
-            logging: true,
+            logging: true
         }
+
+        if (env !== 'Dev') {
+            connection.ssl = false;
+            connection.extra = {
+                ssl: {
+                    rejectUnauthorized: false,
+                }
+            };            
+        }
+        return connection;
     }
 }
-
 export const APP_CONFIG = new ConfigurationService().APP_CONFIG

@@ -2,13 +2,13 @@ import { Column, CreateDateColumn, PrimaryColumn, PrimaryGeneratedColumn, Update
 
 export class BaseEntity {
 
-    @Column({ type: 'varchar', name: 'created_by' })
+    @Column({ type: 'varchar', name: 'created_by', nullable: true })
     createdBy: string;
 
     @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
     createdAt: Date;
 
-    @Column({ type: 'varchar', name: 'updated_by' })
+    @Column({ type: 'varchar', name: 'updated_by', nullable: true })
     updatedBy: string;
 
     @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
