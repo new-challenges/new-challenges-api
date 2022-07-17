@@ -46,7 +46,7 @@ export class ConfigurationService {
     }
 
     public typeOrmConfig(): any {
-        const env = process.env.EVN;
+        const env = process.env.ENV;
         const connection: any = {
             type: `postgres`,
             host: process.env.DB_HOST,
