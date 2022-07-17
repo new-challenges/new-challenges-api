@@ -68,8 +68,9 @@ export class BaseRepository<T>{
      * @param entity 
      * @returns 
      */
-    create(entity: any) {
-        return this._repos.insert(entity);
+    async create(entity: any): Promise<T> {
+        await this._repos.save(entity);
+        return entity;
     }
 
     /**
@@ -77,8 +78,9 @@ export class BaseRepository<T>{
      * @param entities 
      * @returns 
      */
-    createMany(entities: []) {
-        return this._repos.save(entities);
+    async createMany(entities: T[]) {
+        await this._repos.save(entities);
+        return entities;
     }
 
     /**
@@ -87,7 +89,8 @@ export class BaseRepository<T>{
     * @returns 
     */
     update(entity: any): Promise<T> {
-        return this._repos.save([entity])[0];
+        this._repos.save(entity, {reload: true})[0];
+        return entity;
     }
 
 
@@ -96,8 +99,9 @@ export class BaseRepository<T>{
      * @param entities 
      * @returns 
      */
-    updateMany(entities: []) {
-        return this._repos.save(entities);
+    async updateMany(entities: []) {
+        await this._repos.save(entities);
+        return entities;
     }
 
     /**
@@ -105,7 +109,16 @@ export class BaseRepository<T>{
      * @param options
      * @returns 
      */
-    delete(options?: any): Promise<DeleteResult> {
+    delete(options?: FindOptionsWhere<T> | any): Promise<DeleteResult> {
         return this._repos.delete(options);
+    }
+
+    /**
+     * delete
+     * @param options
+     * @returns 
+     */
+     upsert(entities: T[],  conflictPathsOrOptions: string[]): Promise<DeleteResult> {
+        return this._repos.upsert(entities, conflictPathsOrOptions);
     }
 } 

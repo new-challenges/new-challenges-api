@@ -15,9 +15,31 @@ export const CONTROLLER_CONSTANTS = {
             SIGNUP: 'signup',
         }
     },
-    USER: { NAME: 'user', API_TAG: 'User', METHODS: {
-        UPDATE_PROFILE: 'update-profile'
-    } },
+    USER: {
+        NAME: 'user', API_TAG: 'User', METHODS: {
+            UPDATE_PROFILE: 'update-profile'
+        }
+    },
+    DICTIONARY: {
+        NAME: 'dictionary', API_TAG: 'Dictionary', METHODS: {
+            UPDATE_PROFILE: 'update-profile'
+        }
+    },
+    TRANSACTION: {
+        NAME: 'transaction', API_TAG: 'transaction', METHODS: {
+
+        }
+    },
+    QUESTION: {
+        NAME: 'question', API_TAG: 'Question', METHODS: {
+           
+        }
+    },
+    CHALLENGES: {
+        NAME: 'challenges', API_TAG: 'Challenges', METHODS: {
+           
+        }
+    },
 }
 
 export const METHODS_CONTSTANSTS = {

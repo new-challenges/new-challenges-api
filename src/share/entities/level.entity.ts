@@ -8,8 +8,14 @@ export class LevelEntity extends PKAutoIncrementEntity {
     @Column({name: 'name', length: 255, type:'varchar'})
     name: string;
 
-    @Column({name: 'quanlity'})
-    quanlity: number;
+    @Column({name: 'quantity'})
+    quantity: number;
+
+    @Column({name: 'passed'})
+    passed: number;
+
+    @Column({name: 'practice_time'})
+    practiceTime: number;
 
     @Column({name: 'description', length: 1500, type:'varchar', nullable: true})
     description: string;

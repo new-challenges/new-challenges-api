@@ -6,7 +6,7 @@ import { PKAutoIncrementEntity } from "./base/base.entity";
 @Entity(ENTITY_CONTANSTS.CHALLENGES)
 export class ChallengesEntity extends PKAutoIncrementEntity {
     @Column({ name: 'user_id', type: 'varchar', length: 255 })
-    @Index({ unique: false,  })
+    @Index({ unique: false, })
     userId: string;
 
     @Column({ name: 'start_time', type: 'timestamp' })
@@ -21,6 +21,15 @@ export class ChallengesEntity extends PKAutoIncrementEntity {
     @Column({ name: 'completed' })
     completed: number;
 
+    @Column({ name: 'challenges_type', type: 'varchar', length: 50 })
+    challengesType: string;
+
     @Column({ name: 'status', type: 'varchar', length: 255 })
     status: string;
+
+    @Column({ name: 'level_id'})
+    levelId: string;
+
+    @Column({name: 'passed'})
+    passed: number;
 }

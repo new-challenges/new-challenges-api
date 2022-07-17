@@ -1,12 +1,13 @@
-import { plainToClass, plainToClassFromExist } from "class-transformer";
+import { plainToClass, plainToClassFromExist, plainToInstance } from "class-transformer";
 import { BaseRepository } from "src/repositories/base/base.repository";
 import { FindManyOptions, FindOneOptions, FindOptionsWhere } from "typeorm";
 import { ResponseDto } from "../../dtos/response.dto";
 import { RESPONSE_CODE_CONTANTS } from "../../share/constants/response-code.const";
+import { ApplicationContextService, UserContext } from "../../share/services/application-context.service";
 
 export class BaseService<TRep, TEnity>{
     _dto: any;
-    _entity: any;
+
     constructor(private _repos: BaseRepository<TEnity>, dto: new () => TRep) {
         this._dto = dto;
     }
@@ -32,7 +33,7 @@ export class BaseService<TRep, TEnity>{
      */
     async getPaging(options: FindManyOptions<TEnity>): Promise<ResponseDto> {
 
-        const cloneObject = {...options};
+        const cloneObject = { ...options };
         const take = cloneObject.take || 10;
         const skip = cloneObject.skip * options.take;
         options.skip = skip;
@@ -118,8 +119,14 @@ export class BaseService<TRep, TEnity>{
      * @param entity 
      * @returns 
      */
-    async create(req: any): Promise<ResponseDto> {
-        const data = await this._repos.create(req);
+    async create(entity: any): Promise<ResponseDto> {
+        const userContext = ApplicationContextService.currentUser();
+        if (userContext) {
+            entity.createdBy = userContext.username;
+            entity.updatedBy = userContext.username;
+        }
+        const result = await this._repos.create(entity);
+        const data = plainToClass(this._dto, result);
         return new ResponseDto(
             RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
             RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
@@ -133,6 +140,14 @@ export class BaseService<TRep, TEnity>{
      * @returns 
      */
     async createMany(entities: []): Promise<ResponseDto> {
+        const userContext = ApplicationContextService.currentUser();
+        if (userContext) {
+            entities.forEach((item: any) => {
+                item.createdBy = userContext.username;
+                item.updatedBy = userContext.username;
+            });
+
+        }
         const data = await this._repos.createMany(entities);
         return new ResponseDto(
             RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
@@ -147,7 +162,12 @@ export class BaseService<TRep, TEnity>{
     * @returns 
     */
     async update(entity: any): Promise<ResponseDto> {
-        const data = await this._repos.update(entity);
+        const userContext = ApplicationContextService.currentUser();
+        if (userContext) {
+            entity.updatedBy = userContext.username;
+        }
+        const result = await this._repos.update(entity);
+        const data = plainToClass(this._dto, result);
         return new ResponseDto(
             RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
             RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
@@ -162,6 +182,12 @@ export class BaseService<TRep, TEnity>{
      * @returns 
      */
     async updateMany(entities: []): Promise<ResponseDto> {
+        const userContext = ApplicationContextService.currentUser();
+        if (userContext) {
+            entities.forEach((item: any) => {
+                item.updatedBy = userContext.username;
+            });
+        }
         const data = await this._repos.updateMany(entities);
         return new ResponseDto(
             RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
@@ -175,7 +201,7 @@ export class BaseService<TRep, TEnity>{
      * @param options
      * @returns 
      */
-    async delete(options?: any): Promise<ResponseDto> {
+    async delete(options?: FindOptionsWhere<TEnity> | any): Promise<ResponseDto> {
         const data = await this._repos.delete(options);
         return new ResponseDto(
             RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,

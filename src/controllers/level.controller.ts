@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { IsNull, Like, Not } from "typeorm";
 import { CreateLevelRequest } from "../dtos/level/requests/create-level.request";
 import { PagingLevelRequest } from "../dtos/level/requests/paging-level.request";
 import { UpdateLevelRequest } from "../dtos/level/requests/update-level.request";
+import { AuthUserInterceptor } from "../interceptors/auth-user-interceptor.service";
 import { Roles } from "../jwt/decorators/role.decorator";
 import { JwtAuthGuard } from "../jwt/gaurds/jwt-auth.gaurd";
 import { RoleGuard } from "../jwt/gaurds/role.guard";
@@ -23,6 +24,7 @@ export class LevelController {
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(RoleEnum.Supper_Admin, RoleEnum.Customer, RoleEnum.Supper_Admin) 
     @ApiOperation({ summary: 'Get all data' })
+    @UseInterceptors(AuthUserInterceptor)
     async getAll() {
         return await this.levelService.getAll();
     }
@@ -32,6 +34,7 @@ export class LevelController {
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(RoleEnum.Supper_Admin, RoleEnum.Customer, RoleEnum.Supper_Admin) 
     @ApiOperation({ summary: 'Get data pagination' })
+    @UseInterceptors(AuthUserInterceptor)
     async getPaging(@Body() req: PagingLevelRequest) {
         let options = { ...req };
         if (req.name) {
@@ -45,26 +48,38 @@ export class LevelController {
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(RoleEnum.Supper_Admin, RoleEnum.Customer, RoleEnum.Supper_Admin) 
     @ApiOperation({ summary: 'Get data by id(details)' })
+    @UseInterceptors(AuthUserInterceptor)
     async getById(@Param('id') id: number) {
         return await this.levelService.getById(id);
     }
 
     @Post()
     @ApiBearerAuth()
+    @UseInterceptors(AuthUserInterceptor)
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(RoleEnum.Supper_Admin, RoleEnum.Supper_Admin)
-    @ApiOperation({ summary: 'Create level' })
+    @ApiOperation({ summary: 'Create level' })    
     async create(@Body() req: CreateLevelRequest) {
         return await this.levelService.create(req);
     }
 
     @Put()
-    @Post()
     @ApiBearerAuth()
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(RoleEnum.Supper_Admin, RoleEnum.Supper_Admin)
     @ApiOperation({ summary: 'Update level' })
+    @UseInterceptors(AuthUserInterceptor)
     async upadate(@Body() req: UpdateLevelRequest) {
         return await this.levelService.update(req);
+    }
+
+    @Delete(METHODS_CONTSTANSTS.DELETE)
+    @ApiBearerAuth()
+    @UseInterceptors(AuthUserInterceptor)
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(RoleEnum.Supper_Admin, RoleEnum.Supper_Admin)
+    @ApiOperation({ summary: 'Delete level' })    
+    async delete(@Param('id') id: number) {
+        return await this.levelService.delete(id);
     }
 }

@@ -1,9 +1,12 @@
-import { Global, Module } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthController } from "../controllers/auth.controller";
+import { ChallengesController } from "../controllers/challenges.controller";
+import { DictionaryController } from "../controllers/dictionary.controller";
 import { LevelController } from "../controllers/level.controller";
+import { QuestionController } from "../controllers/question.controller";
+import { TransactionController } from "../controllers/transaction.controller";
 import { UserController } from "../controllers/user.controller";
-import { JwtStrategy } from "../jwt/strategies/jwt.strategy";
 import { AuthenticationRepository } from "../repositories/authentication.repository";
 import { ChallengesDetailsRepository } from "../repositories/challenges-details.repository";
 import { ChallengesRepository } from "../repositories/challenges.repository";
@@ -20,7 +23,11 @@ import { UserWalletRefRepository } from "../repositories/user-wallet-ref..reposi
 import { UserRepository } from "../repositories/user.repository";
 import { WalletTokenRefRepository } from "../repositories/wallet-token-ref.repository";
 import { AuthService } from "../services/auth.service";
+import { ChallengesService } from "../services/challenges.service";
+import { DictionaryService } from "../services/dictionary.service";
 import { LevelService } from "../services/level.service";
+import { QuestionService } from "../services/question.service";
+import { TransactionService } from "../services/transaction.service";
 import { UserService } from "../services/user.service";
 import { AuthenticationEntity } from "./entities/authentication.entity";
 import { ChallengesDetailsEntity } from "./entities/challenges-details.entity";
@@ -63,13 +70,21 @@ const services = [
   AuthService,
   UserService,
   BcryptService,
-  TokenService
+  TokenService,
+  DictionaryService,
+  QuestionService,
+  TransactionService,
+  ChallengesService
 ];
 
 const controllers= [
   AuthController,
   LevelController,
-  UserController
+  UserController,
+  DictionaryController,
+  TransactionController,
+  QuestionController,
+  ChallengesController
 ];
 
 const entities = [

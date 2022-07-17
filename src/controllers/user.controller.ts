@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Like } from "typeorm";
 import { CreateUserRequest } from "../dtos/user/requests/create-user.request";
 import { PagingUserRequest } from "../dtos/user/requests/paging-user.request";
 import { UpdateUserRequest } from "../dtos/user/requests/update-user.request";
+import { AuthUserInterceptor } from "../interceptors/auth-user-interceptor.service";
 import { Roles } from "../jwt/decorators/role.decorator";
 import { JwtAuthGuard } from "../jwt/gaurds/jwt-auth.gaurd";
 import { RoleGuard } from "../jwt/gaurds/role.guard";
@@ -26,6 +27,7 @@ export class UserController {
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(RoleEnum.Admin)
     @ApiOperation({ summary: 'Get data pagination' })
+    @UseInterceptors(AuthUserInterceptor)
     async getPaging(@Body() req: PagingUserRequest) {
         let options = { ...req };
         if (req.name) {
@@ -39,6 +41,7 @@ export class UserController {
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(RoleEnum.Admin, RoleEnum.Customer, RoleEnum.Supper_Admin)
     @ApiOperation({ summary: 'Get data by id(details)' })
+    @UseInterceptors(AuthUserInterceptor)
     async getById(@Param('id') id: number) {
         return await this.userService.getById(id);
     }
@@ -48,6 +51,7 @@ export class UserController {
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(RoleEnum.Admin, RoleEnum.Customer, RoleEnum.Supper_Admin)
     @ApiOperation({ summary: 'Update user' })
+    @UseInterceptors(AuthUserInterceptor)
     async upadate(@Body() req: UpdateUserRequest) {
         return await this.userService.updateInfo(req);
     }
@@ -57,6 +61,7 @@ export class UserController {
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(RoleEnum.Admin, RoleEnum.Customer, RoleEnum.Supper_Admin)
     @ApiOperation({ summary: 'Update status(Active/Inactive)' })
+    @UseInterceptors(AuthUserInterceptor)
     async upadateStatus(@Body() req: UpdateUserRequest) {
         return await this.userService.updateStatus(req);
     }
@@ -66,6 +71,7 @@ export class UserController {
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(RoleEnum.Admin, RoleEnum.Supper_Admin)
     @ApiOperation({ summary: 'Create User' })
+    @UseInterceptors(AuthUserInterceptor)
     async create(@Body() req: CreateUserRequest) {
         return await this.userService.createUser(req);
     }

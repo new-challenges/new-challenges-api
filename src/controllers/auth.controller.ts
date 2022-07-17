@@ -1,9 +1,10 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Post, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { CreateAuthRequest } from "../dtos/auth/requests/create-auth.request";
 import { ValidationOTPRequest } from "../dtos/auth/requests/validation-opt.request";
 import { SignInRequest } from "../dtos/signin/requests/signin.request";
 import { SignUpRequest } from "../dtos/signup/requests/signup.request";
+import { AuthUserInterceptor } from "../interceptors/auth-user-interceptor.service";
 import { Roles } from "../jwt/decorators/role.decorator";
 import { JwtAuthGuard } from "../jwt/gaurds/jwt-auth.gaurd";
 import { RoleGuard } from "../jwt/gaurds/role.guard";
@@ -17,13 +18,13 @@ export class AuthController {
     constructor(private authService: AuthService) { }
 
     @Post(CONTROLLER_CONSTANTS.AUTH.METHODS.Admin_SIGNIN)
-    @ApiOperation({ summary: 'Sign in system with Admin' })   
+    @ApiOperation({ summary: 'Sign in system with Admin' })
     async signIn(@Body() req: SignInRequest) {
         return await this.authService.adminSignIn(req);
     }
 
     @Post(CONTROLLER_CONSTANTS.AUTH.METHODS.CUSTOMER_SIGNIN)
-    @ApiOperation({ summary: 'Sign in system with customer' })   
+    @ApiOperation({ summary: 'Sign in system with customer' })
     async mobieSignIn(@Body() req: SignInRequest) {
         return await this.authService.customerSignIn(req);
     }
@@ -43,8 +44,9 @@ export class AuthController {
     @Post(CONTROLLER_CONSTANTS.AUTH.METHODS.CREATE_ADMIN)
     @ApiBearerAuth()
     @UseGuards(JwtAuthGuard, RoleGuard)
-    @Roles(RoleEnum.Supper_Admin) 
-    @ApiOperation({ summary: 'Create admin' })   
+    @Roles(RoleEnum.Supper_Admin)
+    @ApiOperation({ summary: 'Create admin' })
+    @UseInterceptors(AuthUserInterceptor)
     async createAdmin(@Body() req: CreateAuthRequest) {
         return await this.authService.createAdmin(req);
     }

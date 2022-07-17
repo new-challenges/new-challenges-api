@@ -1,8 +1,7 @@
 import { Exclude, Expose } from "class-transformer";
 
 @Exclude()
-export class LevelResponse {
-
+export class QuestionResponse {
     @Expose()
     id: number;
 
@@ -10,10 +9,10 @@ export class LevelResponse {
     name: string;
 
     @Expose()
-    quantity: number;
+    answer: string;
 
     @Expose()
-    passed: number;
+    point: number;
 
     @Expose()
     description: string;

@@ -1,10 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber, MaxLength } from "class-validator";
+import { IsNotEmpty, MaxLength } from "class-validator";
 
-export class UpdateLevelRequest {
-    @ApiProperty()
-    @IsNotEmpty()
-    id: number;
+export class CreateQuestionRequest {
 
     @ApiProperty()
     @IsNotEmpty()
@@ -12,12 +9,13 @@ export class UpdateLevelRequest {
     name: string;
 
     @ApiProperty()
-    @IsNumber()
-    quantity: number;
+    @IsNotEmpty()
+    @MaxLength(255)
+    answer: string;
 
     @ApiProperty()
-    @IsNumber()
-    passed: number;
+    @IsNotEmpty()
+    point: number;
 
     @ApiProperty()
     @MaxLength(1500, {message: ''})

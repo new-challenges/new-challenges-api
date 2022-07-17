@@ -18,6 +18,7 @@ import { CreateAuthRequest } from "../dtos/auth/requests/create-auth.request";
 import { TokenService } from "../share/services/token.service";
 import e from "express";
 import { In } from "typeorm";
+import { UserContext } from "../share/services/application-context.service";
 
 @Injectable()
 export class AuthService {
@@ -46,8 +47,8 @@ export class AuthService {
         if (find) {
             const isMatch = await this.bcryptService.validationHash(find.password, req.password);
             if (isMatch) {
-                const user = { username: req.username, roles: [find.roleId] };
-                const token = await this.tokenService.generateToken(user)
+                const userContext = new UserContext(req.username, [find.roleId]);
+                const token = await this.tokenService.generateToken(userContext)
                 return new ResponseDto(
                     RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
                     RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
@@ -83,8 +84,8 @@ export class AuthService {
         if (find) {
             const isMatch = await this.bcryptService.validationHash(find.password, req.password);
             if (isMatch) {
-                const user = { username: req.username, roles: [find.roleId] };
-                const token = await this.tokenService.generateToken(user)
+                const userContext = new UserContext(req.username, [find.roleId]);
+                const token = await this.tokenService.generateToken(userContext)
                 return new ResponseDto(
                     RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
                     RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
@@ -161,7 +162,7 @@ export class AuthService {
                     RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
                     { email: req.email, isValid },
                 );
-            }else{
+            } else {
                 return new ResponseDto(
                     RESPONSE_CODE_CONTANTS.E006.CODE,
                     RESPONSE_CODE_CONTANTS.E006.MESSAGES,

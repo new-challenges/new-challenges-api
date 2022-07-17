@@ -13,4 +13,7 @@ export class QuestionEntity extends PKAutoIncrementEntity {
 
     @Column({ name: 'point', nullable: true })
     point: number;
+
+    @Column({ name: 'description', type: 'varchar', length: 1500, nullable: true })
+    description: string;
 }
