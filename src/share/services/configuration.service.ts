@@ -1,7 +1,4 @@
-import { Injectable } from '@nestjs/common';
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
-import { join } from 'path';
 
 export class ConfigurationService {
     constructor() {
@@ -26,6 +23,11 @@ export class ConfigurationService {
                     EXPIRES_IN: String(process.env.JWT_EXPIRES_IN),
                     ALGORTHM: process.env.JWT_ALGORTHM,
                     STRATEGY: process.env.JWT_STRATEGY
+                },
+                EMAIL:{
+                    HOST: process.env.EMAIL_HOST,
+                    ACCOUNT: process.env.EMAIL_ACCOUNT,
+                    PASSWORD: process.env.EMAIL_PASSWORD
                 }
             },
             MYSQL: {
@@ -67,7 +69,7 @@ export class ConfigurationService {
                 ssl: {
                     rejectUnauthorized: false,
                 }
-            };            
+            };
         }
         return connection;
     }

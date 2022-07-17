@@ -45,6 +45,8 @@ import { UserWalletRefEntity } from "./entities/user-wallet-ref.entity";
 import { UserEntity } from "./entities/user.entity";
 import { WalletTokenRefEntity } from "./entities/wallet-token-ref.entity";
 import { BcryptService } from "./services/bcrypt.service";
+import { CommonService } from "./services/common.service";
+import { NodeMailerService } from "./services/node-mailer.service";
 import { TokenService } from "./services/token.service";
 
 const repositories = [
@@ -74,7 +76,9 @@ const services = [
   DictionaryService,
   QuestionService,
   TransactionService,
-  ChallengesService
+  ChallengesService,
+  NodeMailerService,
+  CommonService
 ];
 
 const controllers= [

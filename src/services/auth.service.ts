@@ -19,6 +19,8 @@ import { TokenService } from "../share/services/token.service";
 import e from "express";
 import { In } from "typeorm";
 import { UserContext } from "../share/services/application-context.service";
+import { NodeMailerService } from "../share/services/node-mailer.service";
+import { CommonService } from "../share/services/common.service";
 
 @Injectable()
 export class AuthService {
@@ -27,7 +29,9 @@ export class AuthService {
         private otpRepos: OTPRepository,
         private bcryptService: BcryptService,
         private authRepos: AuthenticationRepository,
-        private tokenService: TokenService
+        private tokenService: TokenService,
+        private nodeMailerService: NodeMailerService,
+        private commonService: CommonService
     ) {
         setTimeout(async () => {
             await this.createSupperAdmin();
@@ -128,7 +132,11 @@ export class AuthService {
             );
         } else {
             const otpEnity = new OTPEnity();
-            const otp = '20220716';
+            const otp = this.commonService.generateOTP();
+
+            // Send mail OTP
+            await this.nodeMailerService.sendEmail(req.username, otp)
+
             otpEnity.id = req.username;
             otpEnity.opt = await this.bcryptService.encrypt(otp);
             otpEnity.expiredDate = moment(new Date()).add(30, 'm').toDate();
@@ -137,7 +145,7 @@ export class AuthService {
             return new ResponseDto(
                 RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
                 RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
-                otp,
+                [],
             );
         }
     }
