@@ -8,7 +8,7 @@ import { UpdateUserRequest } from "../dtos/user/requests/update-user.request";
 import { UserResponse } from "../dtos/user/responses/user.response";
 import { AuthenticationRepository } from "../repositories/authentication.repository";
 import { UserRepository } from "../repositories/user.repository";
-import { DEVICE_CONSTANTS, USER_STATUS_CONSTANTS } from "../share/constants/api.const";
+import { DEVICE_CONSTANTS, USER_STATUS_CONSTANTS } from "../share/constants/app.const";
 import { RESPONSE_CODE_CONTANTS } from "../share/constants/response-code.const";
 import { AuthenticationEntity } from "../share/entities/authentication.entity";
 import { UserEntity } from "../share/entities/user.entity";

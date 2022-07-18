@@ -11,7 +11,7 @@ import { APP_CONFIG } from "../share/services/configuration.service";
 import moment from 'moment';
 import { AuthenticationRepository } from "../repositories/authentication.repository";
 import { ValidationOTPRequest } from "../dtos/auth/requests/validation-opt.request";
-import { DEVICE_CONSTANTS, OPT_STATUS_CONSTANTS, USER_STATUS_CONSTANTS } from "../share/constants/api.const";
+import { DEVICE_CONSTANTS, OPT_STATUS_CONSTANTS, USER_STATUS_CONSTANTS } from "../share/constants/app.const";
 import { AuthenticationEntity } from "../share/entities/authentication.entity";
 import { RoleEnum } from "../share/enums/role.enum";
 import { CreateAuthRequest } from "../dtos/auth/requests/create-auth.request";
@@ -51,8 +51,7 @@ export class AuthService {
         if (find) {
             const isMatch = await this.bcryptService.validationHash(find.password, req.password);
             if (isMatch) {
-                const userContext = new UserContext(req.username, [find.roleId]);
-                const token = await this.tokenService.generateToken(userContext)
+                const token = await this.tokenService.generateToken({username: req.username, roles: [find.roleId]})
                 return new ResponseDto(
                     RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
                     RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,
@@ -88,8 +87,7 @@ export class AuthService {
         if (find) {
             const isMatch = await this.bcryptService.validationHash(find.password, req.password);
             if (isMatch) {
-                const userContext = new UserContext(req.username, [find.roleId]);
-                const token = await this.tokenService.generateToken(userContext)
+                const token = await this.tokenService.generateToken({username: req.username, roles: [find.roleId]})
                 return new ResponseDto(
                     RESPONSE_CODE_CONTANTS.SUCCESSFULLY.CODE,
                     RESPONSE_CODE_CONTANTS.SUCCESSFULLY.MESSAGES,

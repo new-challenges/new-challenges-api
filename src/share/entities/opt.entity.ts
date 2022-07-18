@@ -1,5 +1,5 @@
 import { Column, Entity } from "typeorm";
-import { OPT_STATUS_CONSTANTS } from "../constants/api.const";
+import { OPT_STATUS_CONSTANTS } from "../constants/app.const";
 import { ENTITY_CONTANSTS } from "../constants/entity.const";
 import { PKStringEnity } from "./base/base.entity";
 
